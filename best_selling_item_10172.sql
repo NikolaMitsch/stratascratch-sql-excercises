@@ -1,16 +1,21 @@
 -- https://platform.stratascratch.com/coding/10172-best-selling-item
 
-WITH item_sales_ranked_by_month AS (
-    SELECT
+with item_sales_ranked_by_month as (
+    select
         description,
-        EXTRACT(MONTH FROM invoicedate) invoice_month,
-        unitprice * quantity total_amount,
-        rank() over(partition BY EXTRACT(MONTH FROM invoicedate) ORDER BY unitprice * quantity DESC) rank
-    FROM online_retail
-                                   )
-SELECT
+        extract(month from invoicedate) as invoice_month,
+        unitprice * quantity as total_amount,
+        rank() over(
+            partition by
+                extract(month from invoicedate)
+            order by unitprice * quantity desc
+        ) as rank
+    from online_retail
+)
+
+select
     invoice_month,
     description,
     total_amount
-FROM item_sales_ranked_by_month
-WHERE rank = 1
+from item_sales_ranked_by_month
+where rank = 1

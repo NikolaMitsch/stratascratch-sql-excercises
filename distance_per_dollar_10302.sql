@@ -1,20 +1,23 @@
 -- https://platform.stratascratch.com/coding/10302-distance-per-dollar
 
-WITH requests_with_dpd AS (
-    SELECT
+with requests_with_dpd as (
+    select
         request_date,
-        to_char(request_date, 'yyyy-mm') year_month,
-        (distance_to_travel + driver_to_client_distance) / monetary_cost dpd
-    FROM uber_request_logs
-                          ), requests_with_avg_monthly_dpd AS (
-    SELECT
+        to_char(request_date, 'yyyy-mm') as year_and_month,
+        (distance_to_travel + driver_to_client_distance) / monetary_cost as dpd
+    from uber_request_logs
+),
+
+requests_with_avg_monthly_dpd as (
+    select
         request_date,
         dpd,
-        AVG(dpd) over(partition BY year_month) avg_monthly_dpd
-    FROM requests_with_dpd
-                                                              )
-SELECT
+        avg(dpd) over(partition by year_and_month) as avg_monthly_dpd
+    from requests_with_dpd
+)
+
+select
     request_date,
-    round(abs(dpd - avg_monthly_dpd)::DECIMAL, 2) daily_minus_avg_monthly_dpd
-FROM requests_with_avg_monthly_dpd
-ORDER BY request_date
+    round(abs(dpd - avg_monthly_dpd)::DECIMAL, 2) as daily_minus_avg_monthly_dpd
+from requests_with_avg_monthly_dpd
+order by 1

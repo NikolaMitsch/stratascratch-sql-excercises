@@ -1,11 +1,20 @@
 -- https://platform.stratascratch.com/coding/10284-popularity-percentage
 
-WITH friends_duplicated AS (
-    SELECT user1, user2 FROM facebook_friends UNION SELECT user2 user1, user1 user2 FROM facebook_friends
-                           )
-SELECT
+with friends_duplicated as (
+    select
+        user1,
+        user2
+    from facebook_friends union select
+        user2 as user1,
+        user1 as user2
+    from facebook_friends
+)
+
+select
     user1,
-    COUNT(DISTINCT user2) ::decimal / COUNT(1) over() * 100 popularity_percent
-FROM friends_duplicated
-GROUP BY user1
-ORDER BY user1
+    count(
+        distinct user2
+    )::decimal / count(*) over() * 100 as popularity_percent
+from friends_duplicated
+group by 1
+order by 1

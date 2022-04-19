@@ -1,14 +1,19 @@
 -- https://platform.stratascratch.com/coding/10314-revenue-over-time
 
-WITH total_sales_by_month AS (
-    SELECT
-        to_char(created_at, 'yyyy-mm') year_month,
-        SUM(purchase_amt) total_amount
-    FROM amazon_purchases
-    WHERE purchase_amt >= 0
-    GROUP BY 1
-                             )
-SELECT
-    year_month,
-    AVG(total_amount) over(ORDER BY year_month ASC ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) three_month_rolling_average
-FROM total_sales_by_month
+with total_sales_by_month as (
+    select
+        to_char(created_at, 'yyyy-mm') as year_and_month,
+        sum(purchase_amt) as total_amount
+    from amazon_purchases
+    where purchase_amt >= 0
+    group by 1
+)
+
+select
+    year_and_month,
+    avg(
+        total_amount
+    ) over(
+        order by year_and_month asc rows between 2 preceding and current row
+    ) as three_month_rolling_average
+from total_sales_by_month

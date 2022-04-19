@@ -1,0 +1,8 @@
+[sqlfluff:rules:L010]
+capitalisation_policy = lower
+
+[sqlfluff:rules:L030]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:L054]
+group_by_and_order_by_style = implicit
