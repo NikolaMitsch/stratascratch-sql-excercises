@@ -1,6 +1,9 @@
 [sqlfluff:rules:L010]
 capitalisation_policy = lower
 
+[sqlfluff:rules:L016]
+ignore_comment_lines = True
+
 [sqlfluff:rules:L030]
 extended_capitalisation_policy = lower
 
